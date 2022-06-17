@@ -11,10 +11,10 @@ export OS_USERNAME=$(kubectl get secret -n openstack openstack-keystone -o jsonp
 部署 cinder 仅安装 lvm 后端 helm install -n openstack openstack-cinder kolla-helm/cinder --set ceph.enabled=false 注意：lvm 后建议仅用于测试，cinder chart 会创建一个 loop 设备作为 lvm 的 pv 设备，可以通过 参数 lvm.loop_device_directory 和 lvm.loop_device_size 来指定 loop 文件在宿主机上 的存放目录和大小。
 仅安装 ceph 后端 特别注意的是，ceph 后端依赖 rook，如果想开启 ceph 后端，需要在 部署 cinder 之前安装 rook，并用 rook 创建一个 ceph 集群或使用 rook 纳管一个外部的 ceph 集群。
 helm install -n openstack openstack-cinder kolla-helm/cinder \ --set lvm.</description></item><item><title>部署 glance</title><link>https://kungze.github.io/documents/kolla-helm/glance/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kungze.github.io/documents/kolla-helm/glance/</guid><description>目前 kolla-helm 支持部署两种 glance后端：file和 ceph。
-部署 glance 使用 file 做为存储后端 helm install -n openstack openstack-glance kolla-helm/glance --set ceph.enabled=false 创建的 image 文件，将存储在 /var/lib/glance/images/ 目录下
-使用 ceph 做为存储后端 特别注意的是，ceph 后端依赖 rook，如果想使用 ceph 做为存储后端，需要在
+部署 glance 使用file做为存储后端 helm install -n openstack openstack-glance kolla-helm/glance --set ceph.enabled=false 创建的 image 文件，将存储在 /var/lib/glance/images/ 目录下
+使用ceph做为存储后端 特别注意的是，ceph 后端依赖 rook，如果想使用 ceph 做为存储后端，需要在
 部署 glance 之前安装 rook，并用 rook 创建一个 ceph 集群或使用 rook 纳管一个外部的 ceph 集群。
-helm install -n openstack openstack-glance kolla-helm/glance \ --set ceph.cephClusterNamespace=rook-ceph \ --set ceph.cephClusterName=rook-ceph ceph.cephClusterNamespace 和 ceph.cephClusterName 需要根据具体情况进行修改，默认情况下使用来做为 ceph 后端。
+helm install -n openstack openstack-glance kolla-helm/glance \ --set ceph.cephClusterNamespace=rook-ceph \ --set ceph.cephClusterName=rook-ceph ceph.cephClusterNamespace 和 ceph.cephClusterName 需要根据具体情况进行修改，默认情况下是使用 ceph 做为存储后端。
 验证 通过下面命令观察
 watch -n 1 kubectl -n openstack get pods -l app.</description></item><item><title>开发文档</title><link>https://kungze.github.io/documents/kolla-helm/developer/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kungze.github.io/documents/kolla-helm/developer/</guid><description>这篇文档会深入介绍 kolla-helm 各个 chart 之间是如何配合的，chart 内部 job 的执行顺序以及如何通过 ingress 向外部暴露 openstack 组件的 api 服务。
 通用 chart 在 koll-helm 有三个 chart 比较特殊：common，password，openstack-dep 这个三个都不是以 openstack 服务命名的，我们称它们为通用 chart。
